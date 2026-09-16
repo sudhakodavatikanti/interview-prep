@@ -1,0 +1,5 @@
+You have a table test_results with columns: test_id, run_id, test_name, status ('passed', 'failed', 'skipped'), duration_ms, run_date.
+
+Write a SQL query to find the top 5 slowest tests (by duration_ms) from the most recent run_id.
+
+ select * from test_results WHERE run_id = (select run_id from test_results order by run_date DESC LIMIT 1) order by duration_ms DESC LIMIT 5
