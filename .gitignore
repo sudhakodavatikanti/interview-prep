@@ -3,3 +3,7 @@ experience-inventory.md
 review-schedule.md
 dsa/neetcode75-checklist.md
 scratchpad/
+
+# Python bytecode cache - auto-generated, not source
+__pycache__/
+*.pyc

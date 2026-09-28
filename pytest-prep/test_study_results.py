@@ -1,4 +1,3 @@
-from unittest.mock import Mock
 from study_results import process_study_batch
 import pytest
 
@@ -13,49 +12,47 @@ import pytest
 """
 
 
-@pytest.fixture
-def study_service_mock():
-    return Mock()
 
-def test_study_results_invalid(study_service_mock):
+
+def test_study_results_invalid(mock_service):
     
 
-    study_service_mock.fetch_study.return_value = {'study_id': ['study-123'], 'ffr_value': -2} 
-    result = process_study_batch(study_service_mock, ['study-123'])
+    mock_service.fetch_study.return_value = {'study_id': ['study-123'], 'ffr_value': -2} 
+    result = process_study_batch(mock_service, ['study-123'])
     assert result == [{"study_id": 'study-123', "status": "invalid"}]
 
 
-def test_study_results_flagged(study_service_mock):
+def test_study_results_flagged(mock_service):
     
-    study_service_mock.fetch_study.return_value = {'study_id': ['study-456'], 'ffr_value': 0.8} 
-    result = process_study_batch(study_service_mock, ['study-456'])
+    mock_service.fetch_study.return_value = {'study_id': ['study-456'], 'ffr_value': 0.8} 
+    result = process_study_batch(mock_service, ['study-456'])
     assert result == [{"study_id": 'study-456', "status": "flagged"}]
 
 
-def test_study_results_flagged_another(study_service_mock):
+def test_study_results_flagged_another(mock_service):
 
-    study_service_mock.fetch_study.return_value = {'study_id': ['study-46'], 'ffr_value': 1.0} 
-    result = process_study_batch(study_service_mock, ['study-46'])
+    mock_service.fetch_study.return_value = {'study_id': ['study-46'], 'ffr_value': 1.0} 
+    result = process_study_batch(mock_service, ['study-46'])
     assert result == [{"study_id": 'study-46', "status": "flagged"}]
 
 
-def test_study_results_normal(study_service_mock):
+def test_study_results_normal(mock_service):
 
-    study_service_mock.fetch_study.return_value = {'study_id': ['study-6'], 'ffr_value': 2} 
-    result = process_study_batch(study_service_mock, ['study-6'])
+    mock_service.fetch_study.return_value = {'study_id': ['study-6'], 'ffr_value': 2} 
+    result = process_study_batch(mock_service, ['study-6'])
     assert result == [{"study_id": 'study-6', "status": "normal"}]
 
-def test_study_results_error(study_service_mock):
+def test_study_results_error(mock_service):
     
 
-    study_service_mock.fetch_study.side_effect = Exception("fetch failed")
-    result = process_study_batch(study_service_mock, ['study-6'])
+    mock_service.fetch_study.side_effect = Exception("fetch failed")
+    result = process_study_batch(mock_service, ['study-6'])
     assert result == [{"study_id": 'study-6', "status": "error"}]
 
 
-def test_study_results_empty_list(study_service_mock):
+def test_study_results_empty_list(mock_service):
     
-    result = process_study_batch(study_service_mock, [])
+    result = process_study_batch(mock_service, [])
 
     assert result == []
 
